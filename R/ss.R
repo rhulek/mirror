@@ -15,8 +15,7 @@ ss<-function(records=NULL,centralValueType="median",whiskerValueType="5_95",tran
   f3<-whisu[which(whisk==whiskerValueType)]
   
   results<-list()
-  len<-length(records)-1;
-  for (i in 1:len) {
+  for (i in 1:nrow(records)) {
     loca<-as.character(records[i,1])
     data<-as.data.frame(records[i,2])
     

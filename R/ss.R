@@ -1,6 +1,6 @@
 ss<-function(records,centralValueType, whiskerValueType,transformationType="none") {
   
-
+  return(records[[i]]);
   
   library(alldatabrowser)
   library(genasis)  
@@ -18,8 +18,8 @@ ss<-function(records,centralValueType, whiskerValueType,transformationType="none
   
   results<-list()
   for (i in 1:length(records)) {
-    loca<-as.character(records[i,1])
-    data<-as.data.frame(records[i,2])
+    loca<-as.character(records[[i]][[1]])
+    data<-as.data.frame(records[[i]][[2]])
     
     # Nahrada LoQ polovinami limitu
     valu<-data$value

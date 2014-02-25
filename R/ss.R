@@ -1,6 +1,6 @@
 ss<-function(records,centralValueType, whiskerValueType,transformationType="none") {
   
-  return( paste0( as.character(whiskerValueType), " ", as.character(whiskerValueType) )  );
+  return( records[[1]]  );
   
   library(alldatabrowser)
   library(genasis)  

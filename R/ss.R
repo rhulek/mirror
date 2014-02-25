@@ -1,6 +1,6 @@
 ss<-function(records,centralValueType, whiskerValueType,transformationType="none") {
   
-  return(records[[1]][[1]]);
+  return(records[[1]][[2]][[1]]$unit);
   
   library(alldatabrowser)
   library(genasis)  
@@ -18,7 +18,17 @@ ss<-function(records,centralValueType, whiskerValueType,transformationType="none
   
   results<-list()
   for (i in 1:length(records)) {
+    # rowlabel
     loca<-as.character(records[[i]][[1]])
+    #iterace pres values
+    for (j in 1:length(records[[i]][[2]])) {
+
+      #value
+      records[[i]][[2]][[j]]$value
+      #loqValue
+      records[[i]][[2]][[j]][[2]]
+    }
+    
     data<-as.data.frame(records[[i]][[2]])
     
     # Nahrada LoQ polovinami limitu

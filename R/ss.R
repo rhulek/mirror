@@ -18,7 +18,7 @@ ss<-function(records,centralValueType, whiskerValueType,transformationType="none
   f3<-whisu[which(whisk==whiskerValueType)]
   
   results<-list()
-  for (i in 1:nrow(records)) {
+  for (i in 1:nrow(as.data.frame(records))) {
     loca<-as.character(records[i,1])
     data<-as.data.frame(records[i,2])
     

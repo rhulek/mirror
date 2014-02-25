@@ -1,6 +1,4 @@
-ss<-function(records,centralValueType, whiskerValueType,transformationType="none") {
-  
-  return(records[[1]][[2]][[1]]$unit);
+ss<-function(records=NULL,centralValueType="median",whiskerValueType="5_95",transformationType="none") {
   
   library(alldatabrowser)
   library(genasis)  
@@ -18,22 +16,26 @@ ss<-function(records,centralValueType, whiskerValueType,transformationType="none
   
   results<-list()
   for (i in 1:length(records)) {
-    # rowlabel
-    loca<-as.character(records[[i]][[1]])
-    #iterace pres values
-    for (j in 1:length(records[[i]][[2]])) {
-
-      #value
-      records[[i]][[2]][[j]]$value
-      #loqValue
-      records[[i]][[2]][[j]][[2]]
-    }
+    loca<-as.character(records[[i]]$rowLabel)
+    value        <-c()
+    loqValue     <-c()
+    loqMethodCode<-c()
+    unit         <-c()
+    dateTime     <-c()
+    timeLength   <-c()
     
-    data<-as.data.frame(records[[i]][[2]])
+    for (j in 1:length(records[[i]]$values))
+      value        <-c(value,        records[[i]]$values[[j]]$value)
+    loqValue     <-c(loqValue,     records[[i]]$values[[j]]$loqValue)
+    loqMethodCode<-c(loqMethodCode,records[[i]]$values[[j]]$loqMethodCode)
+    unit         <-c(unit,         records[[i]]$values[[j]]$unit)
+    dateTime     <-c(dateTime,     records[[i]]$values[[j]]$dateTime)
+    timeLength   <-c(timeLength,   records[[i]]$values[[j]]$timeLength)
+    
     
     # Nahrada LoQ polovinami limitu
-    valu<-data$value
-    valu[which(is.na(valu)&data$loqMethodCode=="INS")]<-data$loqValue[which(is.na(valu))]*1/2
+    valu<-value
+    valu[which(is.na(valu)&loqMethodCode=="INS")]<-loqValue[which(is.na(valu))]*1/2
     
     # Logaritmicka transformace
     if (transformationType=="log") {
@@ -41,23 +43,23 @@ ss<-function(records,centralValueType, whiskerValueType,transformationType="none
     }
     
     # Jednotky musi byt stejne
-    if (length(unique(data$unit))>1) {
+    if (length(unique(unit))>1) {
       stop()
     } else {
-      unit<-unique(data$unit)
+      unitu<-unique(data$unit)
     }
     
     result<-list(label=loca,
-                  n=nrow(data),
-                  nUnderLOQ=length(which(is.na(data$value))),
-                  unit=unit,
-                  centralValue=sapply(list(valu),FUN=f1),
-                  centralValueType=centralValueType,
-                  whiskerTopValue=sapply(list(valu),FUN=f3),
-                  whiskerBottomValue=sapply(list(valu),FUN=f2),
-                  whiskerType=whiskerValueType)
+                 n=legth(records[[i]]$values),
+                 nUnderLOQ=length(which(is.na(value))),
+                 unit=unitu,
+                 centralValue=sapply(list(valu),FUN=f1),
+                 centralValueType=centralValueType,
+                 whiskerTopValue=sapply(list(valu),FUN=f3),
+                 whiskerBottomValue=sapply(list(valu),FUN=f2),
+                 whiskerType=whiskerValueType)
     results<-as.list(c(results,list(result)))
   }
   
-    return(results)  
+  return(results)  
 }

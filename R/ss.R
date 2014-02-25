@@ -1,6 +1,6 @@
 ss<-function(records=NULL,centralValueType="median",whiskerValueType="5_95",transformationType="none") {
   
-  library(alldatabrowser)
+  library(alldatabrowser)asda
   library(genasis)  
   
   whisk<-c("5_95","25_75","min_max","2iq","ci")

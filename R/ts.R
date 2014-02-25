@@ -1,16 +1,3 @@
-# Testovaci data v JSON reprezentaci
-timeSeriesDataJson = '[{"label":"Site 0","values":[{"value":2.58,"loqValue":3.939,"loqMethodCode":"INS","unit":"ng_m3","dateTime":null,"dateTimeString":"2000-02-26","timeLength":23},{"value":3.147,"loqValue":3.289,"loqMethodCode":"INS","unit":"ng_m3","dateTime":null,"dateTimeString":"1996-01-26","timeLength":13},{"value":0.114,"loqValue":5.319,"loqMethodCode":"INS","unit":"ng_m3","dateTime":null,"dateTimeString":"2002-02-23","timeLength":11}]},{"label":"Site 1","values":[{"value":4.661,"loqValue":2.114,"loqMethodCode":"INS","unit":"ng_m3","dateTime":null,"dateTimeString":"2004-01-06","timeLength":19},{"value":2.935,"loqValue":0.262,"loqMethodCode":"INS","unit":"ng_m3","dateTime":null,"dateTimeString":"2010-01-05","timeLength":14},{"value":0.465,"loqValue":5.812,"loqMethodCode":"INS","unit":"ng_m3","dateTime":null,"dateTimeString":"2006-03-11","timeLength":5},{"value":6.879,"loqValue":9.331,"loqMethodCode":"INS","unit":"ng_m3","dateTime":null,"dateTimeString":"1997-08-02","timeLength":15}]},{"label":"Site 2","values":[{"value":5.747,"loqValue":5.895,"loqMethodCode":"INS","unit":"ng_m3","dateTime":null,"dateTimeString":"1990-04-08","timeLength":27},{"value":7.306,"loqValue":8.274,"loqMethodCode":"INS","unit":"ng_m3","dateTime":null,"dateTimeString":"1995-08-03","timeLength":22},{"value":0.157,"loqValue":8.873,"loqMethodCode":"INS","unit":"ng_m3","dateTime":null,"dateTimeString":"2005-11-23","timeLength":10}]},{"label":"Site 3","values":[{"value":6.558,"loqValue":7.329,"loqMethodCode":"INS","unit":"ng_m3","dateTime":null,"dateTimeString":"1991-08-23","timeLength":9},{"value":1.929,"loqValue":2.338,"loqMethodCode":"INS","unit":"ng_m3","dateTime":null,"dateTimeString":"1995-10-25","timeLength":8},{"value":8.103,"loqValue":0.961,"loqMethodCode":"INS","unit":"ng_m3","dateTime":null,"dateTimeString":"1994-07-14","timeLength":13},{"value":8.053,"loqValue":5.394,"loqMethodCode":"INS","unit":"ng_m3","dateTime":null,"dateTimeString":"1991-09-13","timeLength":7},{"value":5.431,"loqValue":2.877,"loqMethodCode":"INS","unit":"ng_m3","dateTime":null,"dateTimeString":"2001-05-01","timeLength":10}]}]';
-
-# prevod testovacich dat do nativni podoby - takto bude strukturovan vstup funkce timeSeries predavany do argumentu records
-timeSeriesData = jsonlite::fromJSON(timeSeriesDataJson);
-#records<-timeSeriesData
-#i<-2
-
-# timeSeriesData$values[[1]]$value
-# class(timeSeriesData$values)
-
-
-
 # Vytvori datovou strukturu pro report TimeSeries
 #
 # Pro kazdou casovou radu provede:

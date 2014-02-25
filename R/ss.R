@@ -1,6 +1,6 @@
 ss<-function(records,centralValueType, whiskerValueType,transformationType="none") {
   
-  return(records[[i]]);
+  return(records[[1]]);
   
   library(alldatabrowser)
   library(genasis)  

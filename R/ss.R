@@ -1,6 +1,6 @@
-ss<-function(records,centralValueType="median",whiskerValueType="5_95",transformationType="none") {
+ss<-function(records,centralValueType, whiskerValueType,transformationType="none") {
   
-
+  return( paste0( as.character(whiskerValueType), " ", as.character(whiskerValueType) )  );
   
   library(alldatabrowser)
   library(genasis)  

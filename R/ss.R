@@ -46,7 +46,7 @@ ss<-function(records=NULL,centralValueType="median",whiskerValueType="5_95",tran
     if (length(unique(unit))>1) {
       stop()
     } else {
-      unitu<-unique(data$unit)
+      unitu<-unique(unit)
     }
     
     result<-list(label=loca,

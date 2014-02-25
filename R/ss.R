@@ -1,6 +1,6 @@
 ss<-function(records,centralValueType="median",whiskerValueType="5_95",transformationType="none") {
   
-  return(nrow(records));
+  return("nasrat");
   
   library(alldatabrowser)
   library(genasis)  

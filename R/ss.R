@@ -1,6 +1,6 @@
-ss<-function(records=NULL,centralValueType="median",whiskerValueType="5_95",transformationType="none") {
+summaryStatistics<-function(records=NULL,centralValueType="median",whiskerValueType="5_95",transformationType="none") {
   
-  library(alldatabrowser)asda
+  library(alldatabrowser)
   library(genasis)  
   
   whisk<-c("5_95","25_75","min_max","2iq","ci")
@@ -50,13 +50,13 @@ ss<-function(records=NULL,centralValueType="median",whiskerValueType="5_95",tran
     }
     
     result<-list(label=loca,
-                 n=length(records[[i]]$values),
+                 n=legth(records[[i]]$values),
                  nUnderLOQ=length(which(is.na(value))),
                  unit=unitu,
-                 centralValue=sapply(list(valu),FUN=f1),
+                 centralValue=unlist(sapply(list(valu),FUN=f1)),
                  centralValueType=centralValueType,
-                 whiskerTopValue=sapply(list(valu),FUN=f3),
-                 whiskerBottomValue=sapply(list(valu),FUN=f2),
+                 whiskerTopValue=unlist(sapply(list(valu),FUN=f3)),
+                 whiskerBottomValue=unlist(sapply(list(valu),FUN=f2)),
                  whiskerType=whiskerValueType)
     results<-as.list(c(results,list(result)))
   }

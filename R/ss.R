@@ -24,14 +24,14 @@ summaryStatistics<-function(records=NULL,centralValueType="median",whiskerValueT
     dateTime     <-c()
     timeLength   <-c()
     
-    for (j in 1:length(records[[i]]$values))
+    for (j in 1:length(records[[i]]$values)) {
       value        <-c(value,        records[[i]]$values[[j]]$value)
-    loqValue     <-c(loqValue,     records[[i]]$values[[j]]$loqValue)
-    loqMethodCode<-c(loqMethodCode,records[[i]]$values[[j]]$loqMethodCode)
-    unit         <-c(unit,         records[[i]]$values[[j]]$unit)
-    dateTime     <-c(dateTime,     records[[i]]$values[[j]]$dateTime)
-    timeLength   <-c(timeLength,   records[[i]]$values[[j]]$timeLength)
-    
+      loqValue     <-c(loqValue,     records[[i]]$values[[j]]$loqValue)
+      loqMethodCode<-c(loqMethodCode,records[[i]]$values[[j]]$loqMethodCode)
+      unit         <-c(unit,         records[[i]]$values[[j]]$unit)
+      dateTime     <-c(dateTime,     records[[i]]$values[[j]]$dateTime)
+      timeLength   <-c(timeLength,   records[[i]]$values[[j]]$timeLength)
+    }
     
     # Nahrada LoQ polovinami limitu
     valu<-value

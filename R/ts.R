@@ -1,13 +1,5 @@
-# Testovaci data v JSON reprezentaci
-timeSeriesDataJson = '[{"label":"Site 0","values":[{"value":2.58,"loqValue":3.939,"loqMethodCode":"INS","unit":"ng_m3","dateTime":null,"dateTimeString":"2000-02-26","timeLength":23},{"value":3.147,"loqValue":3.289,"loqMethodCode":"INS","unit":"ng_m3","dateTime":null,"dateTimeString":"1996-01-26","timeLength":13},{"value":0.114,"loqValue":5.319,"loqMethodCode":"INS","unit":"ng_m3","dateTime":null,"dateTimeString":"2002-02-23","timeLength":11}]},{"label":"Site 1","values":[{"value":4.661,"loqValue":2.114,"loqMethodCode":"INS","unit":"ng_m3","dateTime":null,"dateTimeString":"2004-01-06","timeLength":19},{"value":2.935,"loqValue":0.262,"loqMethodCode":"INS","unit":"ng_m3","dateTime":null,"dateTimeString":"2010-01-05","timeLength":14},{"value":0.465,"loqValue":5.812,"loqMethodCode":"INS","unit":"ng_m3","dateTime":null,"dateTimeString":"2006-03-11","timeLength":5},{"value":6.879,"loqValue":9.331,"loqMethodCode":"INS","unit":"ng_m3","dateTime":null,"dateTimeString":"1997-08-02","timeLength":15}]},{"label":"Site 2","values":[{"value":5.747,"loqValue":5.895,"loqMethodCode":"INS","unit":"ng_m3","dateTime":null,"dateTimeString":"1990-04-08","timeLength":27},{"value":7.306,"loqValue":8.274,"loqMethodCode":"INS","unit":"ng_m3","dateTime":null,"dateTimeString":"1995-08-03","timeLength":22},{"value":0.157,"loqValue":8.873,"loqMethodCode":"INS","unit":"ng_m3","dateTime":null,"dateTimeString":"2005-11-23","timeLength":10}]},{"label":"Site 3","values":[{"value":6.558,"loqValue":7.329,"loqMethodCode":"INS","unit":"ng_m3","dateTime":null,"dateTimeString":"1991-08-23","timeLength":9},{"value":1.929,"loqValue":2.338,"loqMethodCode":"INS","unit":"ng_m3","dateTime":null,"dateTimeString":"1995-10-25","timeLength":8},{"value":8.103,"loqValue":0.961,"loqMethodCode":"INS","unit":"ng_m3","dateTime":null,"dateTimeString":"1994-07-14","timeLength":13},{"value":8.053,"loqValue":5.394,"loqMethodCode":"INS","unit":"ng_m3","dateTime":null,"dateTimeString":"1991-09-13","timeLength":7},{"value":5.431,"loqValue":2.877,"loqMethodCode":"INS","unit":"ng_m3","dateTime":null,"dateTimeString":"2001-05-01","timeLength":10}]}]';
-
-# prevod testovacich dat do nativni podoby - takto bude strukturovan vstup funkce timeSeries predavany do argumentu records
-timeSeriesData = jsonlite::fromJSON(timeSeriesDataJson);
-#records<-timeSeriesData
-#i<-2
-
-# timeSeriesData$values[[1]]$value
-# class(timeSeriesData$values)
+# timeSeriesvalues[[1]]$value
+# class(timeSeriesvalues)
 
 
 
@@ -28,23 +20,34 @@ ts <- function(records, centralValueType="median", whiskerValueType="5_95", tran
   seriesSets<-list()
   labels<-list()
   # i cyklus bezi pres sites
-  for (i in 1:nrow(records)) {
-    loca<-as.character(records[i,1])
-    data<-as.data.frame(records[i,2])
+  for (i in 1:length(records)) {
+    loca<-as.character(records[[i]]$rowLabel)
+    value        <-c()
+    loqValue     <-c()
+    loqMethodCode<-c()
+    unit         <-c()
+    dateTime     <-c()
+    timeLength   <-c()
     
-    data$dateTime<-as.Date(data$dateTimeString)
-    data<-data[order(data$dateTimeString),]
+    for (j in 1:length(records[[i]]$values)) {
+      value        <-c(value,        records[[i]]$values[[j]]$value)
+      loqValue     <-c(loqValue,     records[[i]]$values[[j]]$loqValue)
+      loqMethodCode<-c(loqMethodCode,records[[i]]$values[[j]]$loqMethodCode)
+      unit         <-c(unit,         records[[i]]$values[[j]]$unit)
+      dateTime     <-c(dateTime,     records[[i]]$values[[j]]$dateTime)
+      timeLength   <-c(timeLength,   records[[i]]$values[[j]]$timeLength)
+    }
     
     # Nahrada LoQ (v promenne valu budou hodnoty vstupujici do vypoctu)
-    valu<-data$value
-    valu[which(is.na(valu)&data$loqMethodCode=="INS")]<-data$loqValue[which(is.na(valu))]*1/2
+    valu<-value
+    valu[which(is.na(valu)&loqMethodCode=="INS")]<-loqValue[which(is.na(valu))]*1/2
     
     # Logaritmicka transformace
     if (transformationType=="log") {
       valu<-log(valu)
     }
     
-    hole<-3*mean(data$dateTime[-1]-data$dateTime[-nrow(data)],trim=0.05)
+    hole<-3*mean(dateTime[-1]-dateTime[-length(records[[i]]$values)],trim=0.05)
     
     # k udava poradi segmentu jedne casove rady
     k<-1
@@ -52,20 +55,20 @@ ts <- function(records, centralValueType="median", whiskerValueType="5_95", tran
     series<-list()
     
     # j cyklus bezi pres jednotliva mereni
-    for (j in 1:nrow(data)) {
+    for (j in 1:length(records[[i]]$values)) {
       cv<-list(value=valu[j],
-               loqValue=data$loqValue[j],
+               loqValue=loqValue[j],
                label=loca,
-               loqMethodCode=data$loqMethodCode[j],
-               unit=data$unit[j],
-               dateTime=data$dateTime[j],
-               dateTimeString=data$dateTimeString[j],
-               timeLength=nrow(data));
+               loqMethodCode=loqMethodCode[j],
+               unit=unit[j],
+               dateTime=dateTime[j],
+               dateTimeString=dateTimeString[j],
+               timeLength=length(records[[i]]$values));
       
       if (j==1) {
         values<-as.list(c(values,list(cv)))
       } else {
-        if ((data$dateTime[j]-data$dateTime[j-1])<hole) {
+        if ((dateTime[j]-dateTime[j-1])<hole) {
           values<-as.list(c(values,list(cv)))
         } else {
           timeSeriesRecord<-list(values=values,label=paste0("site",i," part",k))
@@ -80,7 +83,7 @@ ts <- function(records, centralValueType="median", whiskerValueType="5_95", tran
     
     # Popis primarnich casovych rad v 1. cyklu    
     if (k<2) {
-      res<-genstatistic(valu,data$dateTime)$res
+      res<-genstatistic(valu,dateTime)$res
       
       trendSummary<-list(delta=res$delta,
                          mannKendall=res$"Mann-Kendall",
@@ -127,16 +130,27 @@ ts <- function(records, centralValueType="median", whiskerValueType="5_95", tran
   f3<-whisu[which(whisk==whiskerValueType)]
   
   # i cyklus bezi pres sites
-  for (i in 1:nrow(records)) {
-    loca<-as.character(records[i,1])
-    data<-as.data.frame(records[i,2])
+  for (i in 1:length(records)) {
+    loca<-as.character(records[[i]]$rowLabel)
+    value        <-c()
+    loqValue     <-c()
+    loqMethodCode<-c()
+    unit         <-c()
+    dateTime     <-c()
+    timeLength   <-c()
     
-    data$dateTime<-as.Date(data$dateTimeString)
-    data<-data[order(data$dateTimeString),]
+    for (j in 1:length(records[[i]]$values)) {
+      value        <-c(value,        records[[i]]$values[[j]]$value)
+      loqValue     <-c(loqValue,     records[[i]]$values[[j]]$loqValue)
+      loqMethodCode<-c(loqMethodCode,records[[i]]$values[[j]]$loqMethodCode)
+      unit         <-c(unit,         records[[i]]$values[[j]]$unit)
+      dateTime     <-c(dateTime,     records[[i]]$values[[j]]$dateTime)
+      timeLength   <-c(timeLength,   records[[i]]$values[[j]]$timeLength)
+    }
     
     # Nahrada LoQ (v promenne valu budou hodnoty vstupujici do vypoctu)
-    valu<-data$value
-    valu[which(is.na(valu)&data$loqMethodCode=="INS")]<-data$loqValue[which(is.na(valu))]*1/2
+    valu<-value
+    valu[which(is.na(valu)&loqMethodCode=="INS")]<-loqValue[which(is.na(valu))]*1/2
     
     # Logaritmicka transformace
     if (transformationType=="log") {
@@ -144,14 +158,14 @@ ts <- function(records, centralValueType="median", whiskerValueType="5_95", tran
     }
     
     # Jednotky musi byt stejne
-    if (length(unique(data$unit))>1) {
+    if (length(unique(unit))>1) {
       stop()
     } else {
-      unit<-unique(data$unit)
+      unit<-unique(unit)
     }
     
     # Rocni agregace do noveho data.frame aggr
-    year<-gendate(substr(data$dateTimeString,1,4))
+    year<-gendate(substr(dateTimeString,1,4))
     aggr<-data.frame(aggregate(valu,by=list(year),FUN=f1)[,2],
                      unit,
                      centralValueType,
@@ -161,7 +175,7 @@ ts <- function(records, centralValueType="median", whiskerValueType="5_95", tran
                      gendate(aggregate(valu,by=list(year),FUN=f1)[,1]),
                      as.character(aggregate(valu,by=list(year),FUN=f1)[,1]),
                      as.character(aggregate(valu,by=list(year),FUN=length)[,2]),
-                     as.character(aggregate(data$value,by=list(year),FUN=loqlength)[,2]))
+                     as.character(aggregate(value,by=list(year),FUN=loqlength)[,2]))
     colnames(aggr)<-c("centralValue","unit","centralValueType","whiskerTopValue","whiskerBottomValue","whiskerType","dateTime","dateTimeString","n","nUnderLOQ")
     
     hole<-3*mean(aggr$dateTime[-1]-aggr$dateTime[-nrow(aggr)],trim=0.05)
@@ -238,26 +252,37 @@ ts <- function(records, centralValueType="median", whiskerValueType="5_95", tran
   
   ## Treti opakovani cyklu - vypocet trendu primarnich rad
   # i cyklus bezi pres sites
-  for (i in 1:nrow(records)) {
-    loca<-as.character(records[i,1])
-    data<-as.data.frame(records[i,2])
+  for (i in 1:length(records)) {
+    loca<-as.character(records[[i]]$rowLabel)
+    value        <-c()
+    loqValue     <-c()
+    loqMethodCode<-c()
+    unit         <-c()
+    dateTime     <-c()
+    timeLength   <-c()
     
-    data$dateTime<-as.Date(data$dateTimeString)
-    data<-data[order(data$dateTimeString),]
+    for (j in 1:length(records[[i]]$values)) {
+      value        <-c(value,        records[[i]]$values[[j]]$value)
+      loqValue     <-c(loqValue,     records[[i]]$values[[j]]$loqValue)
+      loqMethodCode<-c(loqMethodCode,records[[i]]$values[[j]]$loqMethodCode)
+      unit         <-c(unit,         records[[i]]$values[[j]]$unit)
+      dateTime     <-c(dateTime,     records[[i]]$values[[j]]$dateTime)
+      timeLength   <-c(timeLength,   records[[i]]$values[[j]]$timeLength)
+    }
     
     # Nahrada LoQ (v promenne valu budou hodnoty vstupujici do vypoctu)
-    valu<-data$value
-    valu[which(is.na(valu)&data$loqMethodCode=="INS")]<-data$loqValue[which(is.na(valu))]*1/2
+    valu<-value
+    valu[which(is.na(valu)&loqMethodCode=="INS")]<-loqValue[which(is.na(valu))]*1/2
     
-    hole<-3*mean(data$dateTime[-1]-data$dateTime[-nrow(data)],trim=0.05)
+    hole<-3*mean(dateTime[-1]-dateTime[-length(records[[i]]$values)],trim=0.05)
     
-    if (max(data$dateTime[-1]-data$dateTime[-nrow(data)])>hole) {
+    if (max(dateTime[-1]-dateTime[-length(records[[i]]$values)])>hole) {
       series<-NA
     } else {
-      curve<-data.frame(as.Date(as.numeric(genplot(valu,data$dateTime,n=20,distr="lnorm",plot=FALSE)$belt[1,]),origin="1970-01-01"),
-                        as.numeric(genplot(valu,data$dateTime,n=20,distr="lnorm",plot=FALSE)$line[1,]),
-                        as.numeric(genplot(valu,data$dateTime,n=20,distr="lnorm",plot=FALSE)$lower[1,]),
-                        as.numeric(genplot(valu,data$dateTime,n=20,distr="lnorm",plot=FALSE)$upper[1,]))
+      curve<-data.frame(as.Date(as.numeric(genplot(valu,dateTime,n=20,distr="lnorm",plot=FALSE)$belt[1,]),origin="1970-01-01"),
+                        as.numeric(genplot(valu,dateTime,n=20,distr="lnorm",plot=FALSE)$line[1,]),
+                        as.numeric(genplot(valu,dateTime,n=20,distr="lnorm",plot=FALSE)$lower[1,]),
+                        as.numeric(genplot(valu,dateTime,n=20,distr="lnorm",plot=FALSE)$upper[1,]))
       colnames(curve)<-c("belt","line","lower","upper")
       
       # Logaritmace v pripade log transformace (trend bude linearni)
@@ -283,9 +308,9 @@ ts <- function(records, centralValueType="median", whiskerValueType="5_95", tran
     series<-as.list(c(series,list(timeSeriesRecord)))
     
     # Popis trendovych krivek v 3. cyklu.    
-    if (max(data$dateTime[-1]-data$dateTime[-nrow(data)])>hole) {
-      trendSummary<-list(slope=genplot(valu,data$dateTime,n=20,distr="lnorm",plot=FALSE)$slope,
-                         intercept=genplot(valu,data$dateTime,n=20,distr="lnorm",plot=FALSE)$intercept)
+    if (max(dateTime[-1]-dateTime[-length(records[[i]]$values)])>hole) {
+      trendSummary<-list(slope=genplot(valu,dateTime,n=20,distr="lnorm",plot=FALSE)$slope,
+                         intercept=genplot(valu,dateTime,n=20,distr="lnorm",plot=FALSE)$intercept)
     }
     else {
       trendSummary<-NA
@@ -312,26 +337,37 @@ ts <- function(records, centralValueType="median", whiskerValueType="5_95", tran
   f3<-whisu[which(whisk==whiskerValueType)]
   
   # i cyklus bezi pres sites
-  for (i in 1:nrow(records)) {
-    loca<-as.character(records[i,1])
-    data<-as.data.frame(records[i,2])
+  for (i in 1:length(records)) {
+    loca<-as.character(records[[i]]$rowLabel)
+    value        <-c()
+    loqValue     <-c()
+    loqMethodCode<-c()
+    unit         <-c()
+    dateTime     <-c()
+    timeLength   <-c()
     
-    data$dateTime<-as.Date(data$dateTimeString)
-    data<-data[order(data$dateTimeString),]
+    for (j in 1:length(records[[i]]$values)) {
+      value        <-c(value,        records[[i]]$values[[j]]$value)
+      loqValue     <-c(loqValue,     records[[i]]$values[[j]]$loqValue)
+      loqMethodCode<-c(loqMethodCode,records[[i]]$values[[j]]$loqMethodCode)
+      unit         <-c(unit,         records[[i]]$values[[j]]$unit)
+      dateTime     <-c(dateTime,     records[[i]]$values[[j]]$dateTime)
+      timeLength   <-c(timeLength,   records[[i]]$values[[j]]$timeLength)
+    }
     
     # Nahrada LoQ (v promenne valu budou hodnoty vstupujici do vypoctu)
-    valu<-data$value
-    valu[which(is.na(valu)&data$loqMethodCode=="INS")]<-data$loqValue[which(is.na(valu))]*1/2
+    valu<-value
+    valu[which(is.na(valu)&loqMethodCode=="INS")]<-loqValue[which(is.na(valu))]*1/2
     
     # Jednotky musi byt stejne
-    if (length(unique(data$unit))>1) {
+    if (length(unique(unit))>1) {
       stop()
     } else {
-      unit<-unique(data$unit)
+      unit<-unique(unit)
     }
     
     # Rocni agregace do noveho data.frame aggr
-    year<-gendate(substr(data$dateTimeString,1,4))
+    year<-gendate(substr(dateTimeString,1,4))
     aggr<-data.frame(aggregate(valu,by=list(year),FUN=f1)[,2],
                      unit,
                      centralValueType,
@@ -341,7 +377,7 @@ ts <- function(records, centralValueType="median", whiskerValueType="5_95", tran
                      gendate(aggregate(valu,by=list(year),FUN=f1)[,1]),
                      as.character(aggregate(valu,by=list(year),FUN=f1)[,1]),
                      as.character(aggregate(valu,by=list(year),FUN=length)[,2]),
-                     as.character(aggregate(data$value,by=list(year),FUN=loqlength)[,2]))
+                     as.character(aggregate(value,by=list(year),FUN=loqlength)[,2]))
     colnames(aggr)<-c("centralValue","unit","centralValueType","whiskerTopValue","whiskerBottomValue","whiskerType","dateTime","dateTimeString","n","nUnderLOQ")
     
     hole<-3*mean(aggr$dateTime[-1]-aggr$dateTime[-nrow(aggr)],trim=0.05)

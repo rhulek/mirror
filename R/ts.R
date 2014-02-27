@@ -1,6 +1,5 @@
 ts<-function(records,centralValueType="median",whiskerValueType="5_95",transformationType="none") {  
   
-  library(alldatabrowser)
   library(genasis)
   
   ## Celkova obalka
@@ -31,7 +30,14 @@ ts<-function(records,centralValueType="median",whiskerValueType="5_95",transform
     }
     
     dateTime<-as.Date(dateTimeString)
-    data<-data[order(dateTimeString),]
+    
+    value         <-value[order(dateTimeString)]
+    loqValue      <-loqValue[order(dateTimeString)]
+    loqMethodCode <-loqMethodCode[order(dateTimeString)]
+    unit          <-unit[order(dateTimeString)]
+    dateTime      <-dateTime[order(dateTimeString)]
+    timeLength    <-timeLength[order(dateTimeString)]
+    dateTimeString<-dateTimeString[order(dateTimeString)]
     
     # Nahrada LoQ (v promenne valu budou hodnoty vstupujici do vypoctu)
     valu<-value
@@ -146,7 +152,14 @@ ts<-function(records,centralValueType="median",whiskerValueType="5_95",transform
     }
     
     dateTime<-as.Date(dateTimeString)
-    data<-data[order(dateTimeString),]
+    
+    value         <-value[order(dateTimeString)]
+    loqValue      <-loqValue[order(dateTimeString)]
+    loqMethodCode <-loqMethodCode[order(dateTimeString)]
+    unit          <-unit[order(dateTimeString)]
+    dateTime      <-dateTime[order(dateTimeString)]
+    timeLength    <-timeLength[order(dateTimeString)]
+    dateTimeString<-dateTimeString[order(dateTimeString)]
     
     # Nahrada LoQ (v promenne valu budou hodnoty vstupujici do vypoctu)
     valu<-value
@@ -273,7 +286,14 @@ ts<-function(records,centralValueType="median",whiskerValueType="5_95",transform
     }
     
     dateTime<-as.Date(dateTimeString)
-    data<-data[order(dateTimeString),]
+    
+    value         <-value[order(dateTimeString)]
+    loqValue      <-loqValue[order(dateTimeString)]
+    loqMethodCode <-loqMethodCode[order(dateTimeString)]
+    unit          <-unit[order(dateTimeString)]
+    dateTime      <-dateTime[order(dateTimeString)]
+    timeLength    <-timeLength[order(dateTimeString)]
+    dateTimeString<-dateTimeString[order(dateTimeString)]
     
     # Nahrada LoQ (v promenne valu budou hodnoty vstupujici do vypoctu)
     valu<-value
@@ -363,7 +383,14 @@ ts<-function(records,centralValueType="median",whiskerValueType="5_95",transform
     }
     
     dateTime<-as.Date(dateTimeString)
-    data<-data[order(dateTimeString),]
+    
+    value         <-value[order(dateTimeString)]
+    loqValue      <-loqValue[order(dateTimeString)]
+    loqMethodCode <-loqMethodCode[order(dateTimeString)]
+    unit          <-unit[order(dateTimeString)]
+    dateTime      <-dateTime[order(dateTimeString)]
+    timeLength    <-timeLength[order(dateTimeString)]
+    dateTimeString<-dateTimeString[order(dateTimeString)]
     
     # Nahrada LoQ (v promenne valu budou hodnoty vstupujici do vypoctu)
     valu<-value

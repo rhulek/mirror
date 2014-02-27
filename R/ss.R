@@ -1,4 +1,4 @@
-summaryStatistics<-function(records=NULL,centralValueType="median",whiskerValueType="5_95",transformationType="none") {
+ss<-function(records=NULL,centralValueType="median",whiskerValueType="5_95",transformationType="none") {
   
   library(alldatabrowser)
   library(genasis)  

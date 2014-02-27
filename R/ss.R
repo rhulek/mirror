@@ -1,4 +1,4 @@
-ss<-function(records=NULL,centralValueType="median",whiskerValueType="5_95",transformationType="none") {
+summaryStatistics<-function(records=NULL,centralValueType="median",whiskerValueType="5_95",transformationType="none") {
   
   library(alldatabrowser)
   library(genasis)  
@@ -50,7 +50,7 @@ ss<-function(records=NULL,centralValueType="median",whiskerValueType="5_95",tran
     }
     
     result<-list(label=loca,
-                 n=length(records[[i]]$values),
+                 n=legth(records[[i]]$values),
                  nUnderLOQ=length(which(is.na(value))),
                  unit=unitu,
                  centralValue=unlist(sapply(list(valu),FUN=f1)),

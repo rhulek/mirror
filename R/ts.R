@@ -25,7 +25,7 @@ ts<-function(records,centralValueType="median",whiskerValueType="5_95",transform
       loqMethodCode <-c(loqMethodCode, records[[i]]$values[[j]]$loqMethodCode)
       unit          <-c(unit,          records[[i]]$values[[j]]$unit)
       dateTime      <-c(dateTime,      records[[i]]$values[[j]]$dateTime)
-      dateTimeString<-c(dateTimestring,records[[i]]$values[[j]]$dateTimeString)
+      dateTimeString<-c(dateTimeString,records[[i]]$values[[j]]$dateTimeString)
       timeLength    <-c(timeLength,    records[[i]]$values[[j]]$timeLength)
     }
     
@@ -140,7 +140,7 @@ ts<-function(records,centralValueType="median",whiskerValueType="5_95",transform
       loqMethodCode <-c(loqMethodCode, records[[i]]$values[[j]]$loqMethodCode)
       unit          <-c(unit,          records[[i]]$values[[j]]$unit)
       dateTime      <-c(dateTime,      records[[i]]$values[[j]]$dateTime)
-      dateTimeString<-c(dateTimestring,records[[i]]$values[[j]]$dateTimeString)
+      dateTimeString<-c(dateTimeString,records[[i]]$values[[j]]$dateTimeString)
       timeLength    <-c(timeLength,    records[[i]]$values[[j]]$timeLength)
     }
     
@@ -267,7 +267,7 @@ ts<-function(records,centralValueType="median",whiskerValueType="5_95",transform
       loqMethodCode <-c(loqMethodCode, records[[i]]$values[[j]]$loqMethodCode)
       unit          <-c(unit,          records[[i]]$values[[j]]$unit)
       dateTime      <-c(dateTime,      records[[i]]$values[[j]]$dateTime)
-      dateTimeString<-c(dateTimestring,records[[i]]$values[[j]]$dateTimeString)
+      dateTimeString<-c(dateTimeString,records[[i]]$values[[j]]$dateTimeString)
       timeLength    <-c(timeLength,    records[[i]]$values[[j]]$timeLength)
     }
     
@@ -357,7 +357,7 @@ ts<-function(records,centralValueType="median",whiskerValueType="5_95",transform
       loqMethodCode <-c(loqMethodCode, records[[i]]$values[[j]]$loqMethodCode)
       unit          <-c(unit,          records[[i]]$values[[j]]$unit)
       dateTime      <-c(dateTime,      records[[i]]$values[[j]]$dateTime)
-      dateTimeString<-c(dateTimestring,records[[i]]$values[[j]]$dateTimeString)
+      dateTimeString<-c(dateTimeString,records[[i]]$values[[j]]$dateTimeString)
       timeLength    <-c(timeLength,    records[[i]]$values[[j]]$timeLength)
     }
     

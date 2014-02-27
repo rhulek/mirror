@@ -2,6 +2,7 @@ ts<-function(records,centralValueType="median",whiskerValueType="5_95",transform
   
   library(alldatabrowser)
   library(genasis)
+  library(Kendall)
   
   ## Celkova obalka
   allSeries<-list()

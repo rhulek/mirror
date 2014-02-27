@@ -1,9 +1,6 @@
-<<<<<<< HEAD
-timeSeries<-function(records,centralValueType="median",whiskerValueType="5_95",transformationType="none") {  
-=======
 ts<-function(records,centralValueType="median",whiskerValueType="5_95",transformationType="none") {  
->>>>>>> 4dd2cebc104e0f32ecff3caff3f4785b79ecba30
   
+  library(alldatabrowser)
   library(genasis)
   
   ## Celkova obalka

@@ -1,4 +1,5 @@
 quantile05<-function(x) {
-  quant<-unlist(quantile(x,0.05,na.rm=TRUE))[1]
+  quant<-c()
+  quant[1]<-quantile(x,0.05,na.rm=TRUE)
   return(quant)
 }

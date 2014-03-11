@@ -333,6 +333,8 @@ ts<-function(records,centralValueType="median",whiskerValueType="5_95",transform
     timeSeriesRecord<-list(values=values,label=paste0("site_trend",i))
     series<-as.list(c(series,list(timeSeriesRecord)))
     
+    return(max(c(hole,dateTime[-1]-dateTime[-length(records[[i]]$values)]))>hole)
+    
     # Popis trendovych krivek v 3. cyklu.    
     if (max(c(hole,dateTime[-1]-dateTime[-length(records[[i]]$values)]))>hole) {
       trendSummary<-list(slope=genplot(valu,dateTime,n=20,distr="lnorm",plot=FALSE)$slope,

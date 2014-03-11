@@ -48,7 +48,7 @@ ts<-function(records,centralValueType="median",whiskerValueType="5_95",transform
       valu<-log(valu)
     }
     
-    hole<-3*mean(dateTime[-1]-dateTime[-length(records[[i]]$values)],trim=0.05)
+    hole<-max(c(0,3*mean(dateTime[-1]-dateTime[-length(records[[i]]$values)],trim=0.05)))
     
     # k udava poradi segmentu jedne casove rady
     k<-1
@@ -192,7 +192,7 @@ ts<-function(records,centralValueType="median",whiskerValueType="5_95",transform
                      as.character(aggregate(value,by=list(year),FUN=loqlength)[,2]))
     colnames(aggr)<-c("centralValue","unit","centralValueType","whiskerTopValue","whiskerBottomValue","whiskerType","dateTime","dateTimeString","n","nUnderLOQ")
     
-    hole<-3*mean(aggr$dateTime[-1]-aggr$dateTime[-nrow(aggr)],trim=0.05)
+    hole<-max(c(0,3*mean(aggr$dateTime[-1]-aggr$dateTime[-nrow(aggr)],trim=0.05)))
     
     # k udava poradi segmentu jedne casove rady
     k<-1
@@ -300,7 +300,7 @@ ts<-function(records,centralValueType="median",whiskerValueType="5_95",transform
     valu<-value
     valu[which(is.na(valu)&loqMethodCode=="INS")]<-loqValue[which(is.na(valu))]*1/2
     
-    hole<-3*mean(dateTime[-1]-dateTime[-length(records[[i]]$values)],trim=0.05)
+    hole<-max(c(0,3*mean(dateTime[-1]-dateTime[-length(records[[i]]$values)],trim=0.05)))
     
     if (max(c(hole,dateTime[-1]-dateTime[-length(records[[i]]$values)]))>hole) { # Hole added to the vector to avoid problems with vector of length 1.
       series<-NA
@@ -312,8 +312,6 @@ ts<-function(records,centralValueType="median",whiskerValueType="5_95",transform
       colnames(curve)<-c("belt","line","lower","upper")
       
       # Logaritmace v pripade log transformace (trend bude linearni)
-      return(list(transformationType=="log"))
-      
       if (transformationType=="log") {
         curve$line<-log(curve$line)
         curve$lower<-log(curve$lower)
@@ -420,7 +418,7 @@ ts<-function(records,centralValueType="median",whiskerValueType="5_95",transform
                      as.character(aggregate(value,by=list(year),FUN=loqlength)[,2]))
     colnames(aggr)<-c("centralValue","unit","centralValueType","whiskerTopValue","whiskerBottomValue","whiskerType","dateTime","dateTimeString","n","nUnderLOQ")
     
-    hole<-3*mean(aggr$dateTime[-1]-aggr$dateTime[-nrow(aggr)],trim=0.05)
+    hole<-max(c(0,3*mean(aggr$dateTime[-1]-aggr$dateTime[-nrow(aggr)],trim=0.05)))
     
     if (max(c(hole,aggr$dateTime[-1]-aggr$dateTime[-nrow(aggr)]))>hole) {
       series<-NA
@@ -516,7 +514,7 @@ ts<-function(records,centralValueType="median",whiskerValueType="5_95",transform
                    as.character(aggregate(valu,by=list(year),FUN=loqlength)[,2]))
   colnames(aggr)<-c("centralValue","unit","centralValueType","whiskerTopValue","whiskerBottomValue","whiskerType","dateTime","dateTimeString","n","nUnderLOQ")
   
-  hole<-3*mean(aggr$dateTime[-1]-aggr$dateTime[-nrow(aggr)],trim=0.05)
+  hole<-max(c(0,3*mean(aggr$dateTime[-1]-aggr$dateTime[-nrow(aggr)],trim=0.05)))
   
   # k udava poradi segmentu jedne casove rady
   k<-1

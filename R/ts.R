@@ -302,6 +302,8 @@ ts<-function(records,centralValueType="median",whiskerValueType="5_95",transform
     
     hole<-3*mean(dateTime[-1]-dateTime[-length(records[[i]]$values)],trim=0.05)
     
+    return(list(dateTime[-1],dateTime[-length(records[[i]]$values)],hole))
+    
     if (max(dateTime[-1]-dateTime[-length(records[[i]]$values)])>hole) {
       series<-NA
     } else {

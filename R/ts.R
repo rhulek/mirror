@@ -302,9 +302,7 @@ ts<-function(records,centralValueType="median",whiskerValueType="5_95",transform
     
     hole<-3*mean(dateTime[-1]-dateTime[-length(records[[i]]$values)],trim=0.05)
     
-    return(max(dateTime[-1]-dateTime[-length(records[[i]]$values)])>hole)
-    
-    if (max(dateTime[-1]-dateTime[-length(records[[i]]$values)])>hole) {
+    if (max(c(hole,dateTime[-1]-dateTime[-length(records[[i]]$values)]))>hole) { # Hole added to the vector to avoid problems with vector of length 1.
       series<-NA
     } else {
       curve<-data.frame(as.Date(as.numeric(genplot(valu,dateTime,n=20,distr="lnorm",plot=FALSE)$belt[1,]),origin="1970-01-01"),
@@ -336,7 +334,7 @@ ts<-function(records,centralValueType="median",whiskerValueType="5_95",transform
     series<-as.list(c(series,list(timeSeriesRecord)))
     
     # Popis trendovych krivek v 3. cyklu.    
-    if (max(dateTime[-1]-dateTime[-length(records[[i]]$values)])>hole) {
+    if (max(c(hole,dateTime[-1]-dateTime[-length(records[[i]]$values)]))>hole) {
       trendSummary<-list(slope=genplot(valu,dateTime,n=20,distr="lnorm",plot=FALSE)$slope,
                          intercept=genplot(valu,dateTime,n=20,distr="lnorm",plot=FALSE)$intercept)
     }
@@ -422,7 +420,7 @@ ts<-function(records,centralValueType="median",whiskerValueType="5_95",transform
     
     hole<-3*mean(aggr$dateTime[-1]-aggr$dateTime[-nrow(aggr)],trim=0.05)
     
-    if (max(aggr$dateTime[-1]-aggr$dateTime[-nrow(aggr)])>hole) {
+    if (max(c(hole,aggr$dateTime[-1]-aggr$dateTime[-nrow(aggr)]))>hole) {
       series<-NA
     } else {
       curve<-data.frame(as.Date(as.numeric(genplot(aggr$centralValue,aggr$dateTime,n=20,distr="lnorm",plot=FALSE)$belt[1,]),origin="1970-01-01"),
@@ -454,7 +452,7 @@ ts<-function(records,centralValueType="median",whiskerValueType="5_95",transform
     }
     
     # Popis trendovych agegovanych krivek ve 4. cyklu.    
-    if (max(aggr$dateTime[-1]-aggr$dateTime[-nrow(aggr)])>hole) {
+    if (max(c(hole,aggr$dateTime[-1]-aggr$dateTime[-nrow(aggr)]))>hole) {
       trendSummary<-list(slope=genplot(valu,aggr$dateTime,n=20,distr="lnorm",plot=FALSE)$slope,
                          intercept=genplot(valu,aggr$dateTime,n=20,distr="lnorm",plot=FALSE)$intercept)
     }

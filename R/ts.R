@@ -80,8 +80,6 @@ ts<-function(records,centralValueType="median",whiskerValueType="5_95",transform
       }
     }
     
-    return(list(valu,dateTime))
-    
     timeSeriesRecord<-list(values=values,label=paste0("site",i," part",k))
     series<-as.list(c(series,list(timeSeriesRecord)))
     

@@ -41,7 +41,7 @@ ts<-function(records,centralValueType="median",whiskerValueType="5_95",transform
     
     # Nahrada LoQ (v promenne valu budou hodnoty vstupujici do vypoctu)
     valu<-value
-    valu[which(is.na(valu)&loqMethodCode=="INS")]<-loqValue[which(is.na(valu))]*1/2
+    valu[which(is.na(valu)&loqMethodCode=="INS")]<-loqValue[which(is.na(valu)&loqMethodCode=="INS")]*1/2
     
     # Logaritmicka transformace
     if (transformationType=="log") {
@@ -88,7 +88,7 @@ ts<-function(records,centralValueType="median",whiskerValueType="5_95",transform
     series<-as.list(c(series,list(timeSeriesRecord)))
     
     # Popis primarnich casovych rad v 1. cyklu    
-    if (k=1) {
+    if (k==1) {
       res<-genstatistic(valu,dateTime)$res
       
       trendSummary<-list(delta=res$delta,
@@ -122,7 +122,9 @@ ts<-function(records,centralValueType="median",whiskerValueType="5_95",transform
     labels<-as.list(c(labels,list(label)))
   }
   
+  
   ## Druhe opakovani cyklu - vypocet rad agregaci
+  
   # Vyber agregacnich funkci
   whisk<-c("5_95","25_75","min_max","2iq","ci")
   whisl<-c("quantile05","quantile25","min","iql","cil")
@@ -168,7 +170,7 @@ ts<-function(records,centralValueType="median",whiskerValueType="5_95",transform
     
     # Nahrada LoQ (v promenne valu budou hodnoty vstupujici do vypoctu)
     valu<-value
-    valu[which(is.na(valu)&loqMethodCode=="INS")]<-loqValue[which(is.na(valu))]*1/2
+    valu[which(is.na(valu)&loqMethodCode=="INS")]<-loqValue[which(is.na(valu)&loqMethodCode=="INS")]*1/2
     
     # Logaritmicka transformace
     if (transformationType=="log") {
@@ -237,7 +239,7 @@ ts<-function(records,centralValueType="median",whiskerValueType="5_95",transform
     series<-as.list(c(series,list(timeSeriesRecord)))
     
     # Popis agregovanych casovych rad ve 2. cyklu
-    if (k=1) {
+    if (k==1) {
       res<-genstatistic(aggr$centralValue,aggr$dateTime)$res
       
       trendSummary<-list(delta=res$delta,
@@ -273,6 +275,7 @@ ts<-function(records,centralValueType="median",whiskerValueType="5_95",transform
   
   
   ## Treti opakovani cyklu - vypocet trendu primarnich rad
+  
   # i cyklus bezi pres sites
   for (i in 1:length(records)) {
     loca<-as.character(records[[i]]$rowLabel)
@@ -306,7 +309,7 @@ ts<-function(records,centralValueType="median",whiskerValueType="5_95",transform
     
     # Nahrada LoQ (v promenne valu budou hodnoty vstupujici do vypoctu)
     valu<-value
-    valu[which(is.na(valu)&loqMethodCode=="INS")]<-loqValue[which(is.na(valu))]*1/2
+    valu[which(is.na(valu)&loqMethodCode=="INS")]<-loqValue[which(is.na(valu)&loqMethodCode=="INS")]*1/2
     
     if (length(dateTime)>1) {
       hole<-3*mean(dateTime[-1]-dateTime[-length(records[[i]]$values)],trim=0.05)
@@ -407,7 +410,7 @@ ts<-function(records,centralValueType="median",whiskerValueType="5_95",transform
     
     # Nahrada LoQ (v promenne valu budou hodnoty vstupujici do vypoctu)
     valu<-value
-    valu[which(is.na(valu)&loqMethodCode=="INS")]<-loqValue[which(is.na(valu))]*1/2
+    valu[which(is.na(valu)&loqMethodCode=="INS")]<-loqValue[which(is.na(valu)&loqMethodCode=="INS")]*1/2
     
     # Jednotky musi byt stejne
     if (length(unique(unit))>1) {
@@ -574,7 +577,7 @@ ts<-function(records,centralValueType="median",whiskerValueType="5_95",transform
   series<-as.list(c(series,list(timeSeriesRecord)))
   
   # Popis celkove agregovane rady
-  if (k=1) {
+  if (k==1) {
     res<-genstatistic(aggr$centralValue,aggr$dateTime)$res
     
     trendSummary<-list(delta=res$delta,

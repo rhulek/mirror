@@ -128,8 +128,8 @@ ts<-function(records,centralValueType="median",whiskerValueType="5_95",transform
   ## Zabaleni vysledku
   allSeries<-list(seriesSets=seriesSets,
                   labels=labels,
-                  allAggregation=allAggregation,
-                  aggregationLabels=aggregationLabels)
+                  allAggregation=1,
+                  aggregationLabels=1)
   
   timeSeriesDataSeries<-list(allSeries=allSeries)
   

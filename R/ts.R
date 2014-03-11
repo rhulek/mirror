@@ -302,7 +302,7 @@ ts<-function(records,centralValueType="median",whiskerValueType="5_95",transform
     
     hole<-max(c(0,3*mean(dateTime[-1]-dateTime[-length(records[[i]]$values)],trim=0.05)))
     
-    return(max(c(hole,dateTime[-1]-dateTime[-length(records[[i]]$values)]))>hole)
+    return(transformationType=="log")
     
     if (max(c(hole,dateTime[-1]-dateTime[-length(records[[i]]$values)]))>hole) { # Hole added to the vector to avoid problems with vector of length 1.
       series<-NA

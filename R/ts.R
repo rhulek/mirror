@@ -431,7 +431,7 @@ ts<-function(records,centralValueType="median",whiskerValueType="5_95",transform
     colnames(aggr)<-c("centralValue","unit","centralValueType","whiskerTopValue","whiskerBottomValue","whiskerType","dateTime","dateTimeString","n","nUnderLOQ")
     
     if (nrow(aggr)>1) {
-      hole<-3*mean(aggr$dateTime[-1]-aggr$dateTime[-nrow(aggr))],trim=0.05)
+      hole<-3*mean(aggr$dateTime[-1]-aggr$dateTime[-nrow(aggr)],trim=0.05)
     } else {
       hole<-0
     }

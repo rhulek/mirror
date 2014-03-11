@@ -276,7 +276,8 @@ ts<-function(records,centralValueType="median",whiskerValueType="5_95",transform
     dateTimeString<-c()
     timeLength    <-c()
     
-    for (j in 1:length(records[[i]]$values)) {
+    #for (j in 1:length(records[[i]]$values)) {
+    for (j in 2:length(records[[i]]$values)) {
       value         <-c(value,         records[[i]]$values[[j]]$value)
       loqValue      <-c(loqValue,      records[[i]]$values[[j]]$loqValue)
       loqMethodCode <-c(loqMethodCode, records[[i]]$values[[j]]$loqMethodCode)
@@ -301,6 +302,8 @@ ts<-function(records,centralValueType="median",whiskerValueType="5_95",transform
     valu[which(is.na(valu)&loqMethodCode=="INS")]<-loqValue[which(is.na(valu))]*1/2
     
     hole<-max(c(0,3*mean(dateTime[-1]-dateTime[-length(records[[i]]$values)],trim=0.05)))
+    
+    return(max(c(hole,dateTime[-1]-dateTime[-length(records[[i]]$values)]))>hole)
     
     if (max(c(hole,dateTime[-1]-dateTime[-length(records[[i]]$values)]))>hole) { # Hole added to the vector to avoid problems with vector of length 1.
       series<-NA

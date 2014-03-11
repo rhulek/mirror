@@ -49,7 +49,7 @@ ts<-function(records,centralValueType="median",whiskerValueType="5_95",transform
     }
    
     if (length(dateTime)>1) {
-      hole<-max(c(0,3*mean(dateTime[-1]-dateTime[-length(records[[i]]$values)],trim=0.05)
+      hole<-3*mean(dateTime[-1]-dateTime[-length(records[[i]]$values)],trim=0.05)
     } else {
       hole<-0
     }

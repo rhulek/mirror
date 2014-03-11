@@ -198,11 +198,7 @@ ts<-function(records,centralValueType="median",whiskerValueType="5_95",transform
                      as.character(aggregate(value,by=list(year),FUN=loqlength)[,2]))
     colnames(aggr)<-c("centralValue","unit","centralValueType","whiskerTopValue","whiskerBottomValue","whiskerType","dateTime","dateTimeString","n","nUnderLOQ")
     
-    if (nrow(aggr)>1) {
-      hole<-3*mean(aggr$dateTime[-1]-aggr$dateTime[-nrow(aggr)],trim=0.05)
-    } else {
-      hole<-0
-    }
+    hole<-0
     
     # k udava poradi segmentu jedne casove rady
     k<-1

@@ -300,8 +300,7 @@ ts<-function(records,centralValueType="median",whiskerValueType="5_95",transform
     valu<-value
     valu[which(is.na(valu)&loqMethodCode=="INS")]<-loqValue[which(is.na(valu))]*1/2
     
-    #hole<-max(c(0,3*mean(dateTime[-1]-dateTime[-length(records[[i]]$values)],trim=0.05)))
-    hole<-0
+    hole<-max(c(0,3*mean(as.numeric(dateTime[-1]-dateTime[-length(records[[i]]$values)]),trim=0.05)))
     
     if (max(c(hole,dateTime[-1]-dateTime[-length(records[[i]]$values)]))>hole) { # Hole added to the vector to avoid problems with vector of length 1.
       series<-NA

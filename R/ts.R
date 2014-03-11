@@ -122,6 +122,366 @@ ts<-function(records,centralValueType="median",whiskerValueType="5_95",transform
     labels<-as.list(c(labels,list(label)))
   }
   
+  ## Druhe opakovani cyklu - vypocet rad agregaci
+  # Vyber agregacnich funkci
+  whisk<-c("5_95","25_75","min_max","2iq","ci")
+  whisl<-c("quantile05","quantile25","min","iql","cil")
+  whisu<-c("quantile95","quantile75","max","iqu","ciu")
+  
+  centv<-c("mean","median","geomean")
+  centf<-c("arimean","quantile50","geomean")
+  
+  f1<-centf[which(centv==centralValueType)]
+  f2<-whisl[which(whisk==whiskerValueType)]
+  f3<-whisu[which(whisk==whiskerValueType)]
+  
+  # i cyklus bezi pres sites
+  for (i in 1:length(records)) {
+    loca<-as.character(records[[i]]$rowLabel)
+    value         <-c()
+    loqValue      <-c()
+    loqMethodCode <-c()
+    unit          <-c()
+    dateTime      <-c()
+    dateTimeString<-c()
+    timeLength    <-c()
+    
+    for (j in 1:length(records[[i]]$values)) {
+      value         <-c(value,         records[[i]]$values[[j]]$value)
+      loqValue      <-c(loqValue,      records[[i]]$values[[j]]$loqValue)
+      loqMethodCode <-c(loqMethodCode, records[[i]]$values[[j]]$loqMethodCode)
+      unit          <-c(unit,          records[[i]]$values[[j]]$unit)
+      dateTime      <-c(dateTime,      records[[i]]$values[[j]]$dateTime)
+      dateTimeString<-c(dateTimeString,records[[i]]$values[[j]]$dateTimeString)
+      timeLength    <-c(timeLength,    records[[i]]$values[[j]]$timeLength)
+    }
+    
+    dateTime<-as.Date(dateTimeString)
+    
+    value         <-value[order(dateTimeString)]
+    loqValue      <-loqValue[order(dateTimeString)]
+    loqMethodCode <-loqMethodCode[order(dateTimeString)]
+    unit          <-unit[order(dateTimeString)]
+    dateTime      <-dateTime[order(dateTimeString)]
+    timeLength    <-timeLength[order(dateTimeString)]
+    dateTimeString<-dateTimeString[order(dateTimeString)]
+    
+    # Nahrada LoQ (v promenne valu budou hodnoty vstupujici do vypoctu)
+    valu<-value
+    valu[which(is.na(valu)&loqMethodCode=="INS")]<-loqValue[which(is.na(valu))]*1/2
+    
+    # Logaritmicka transformace
+    if (transformationType=="log") {
+      valu<-log(valu)
+    }
+    
+    # Jednotky musi byt stejne
+    if (length(unique(unit))>1) {
+      stop("Units of some records differ!")
+    } else {
+      unit<-unique(unit)
+    }
+    
+    # Rocni agregace do noveho data.frame aggr
+    year<-gendate(substr(dateTimeString,1,4))
+    aggr<-data.frame(aggregate(valu,by=list(year),FUN=f1)[,2],
+                     unit,
+                     centralValueType,
+                     aggregate(valu,by=list(year),FUN=f3)[,2],
+                     aggregate(valu,by=list(year),FUN=f2)[,2],
+                     whiskerValueType,
+                     gendate(aggregate(valu,by=list(year),FUN=f1)[,1]),
+                     as.character(aggregate(valu,by=list(year),FUN=f1)[,1]),
+                     as.character(aggregate(valu,by=list(year),FUN=length)[,2]),
+                     as.character(aggregate(value,by=list(year),FUN=loqlength)[,2]))
+    colnames(aggr)<-c("centralValue","unit","centralValueType","whiskerTopValue","whiskerBottomValue","whiskerType","dateTime","dateTimeString","n","nUnderLOQ")
+    
+    if (nrow(aggr)>1) {
+      hole<-3*mean(aggr$dateTime[-1]-aggr$dateTime[-nrow(aggr)],trim=0.05)
+    } else {
+      hole<-0
+    }
+    
+    # k udava poradi segmentu jedne casove rady
+    k<-1
+    values<-list()
+    series<-list()
+    
+    # j cyklus bezi pres jednotliva mereni
+    for (j in 1:nrow(aggr)) {
+      aggValue<-list(label=paste0(loca,"_aggr"),
+                     n=aggr$n[j],
+                     nUnderLOQ=aggr$nUnderLOQ[j],
+                     unit=aggr$unit[j],
+                     centralValue=aggr$centralValue[j],
+                     centralValueType=aggr$centralValueType[j],
+                     whiskerTopValue=aggr$whiskerTopValue[j],
+                     whiskerBottomValue=aggr$whiskerBottomValue[j],
+                     whiskerType=aggr$whiskerType[j],
+                     dateTimeString=aggr$dateTimeString[j]);
+      
+      if (j==1) {
+        values<-as.list(c(values,list(aggValue)))
+      } else {
+        if ((aggr$dateTime[j]-aggr$dateTime[j-1])<hole) {
+          values<-as.list(c(values,list(aggValue)))
+        } else {
+          timeSeriesRecord<-list(values=values,label=paste0("site_aggr",i," part",k))
+          k<-k+1
+          series<-as.list(c(series,list(timeSeriesRecord)))
+          values<-list(aggValue)
+        }
+      }
+    }
+    timeSeriesRecord<-list(values=values,label=paste0("site_aggr",i," part",k))
+    series<-as.list(c(series,list(timeSeriesRecord)))
+    
+    # Popis agregovanych casovych rad ve 2. cyklu
+    if (k<2) {
+      res<-genstatistic(aggr$centralValue,aggr$dateTime)$res
+      
+      trendSummary<-list(delta=res$delta,
+                         mannKendall=res$"Mann-Kendall",
+                         mannKendallP=res$MKp,
+                         daniels=res$Daniels,
+                         danielsP=res$Dp,
+                         mean=res$mean,
+                         sd=res$sd,
+                         geomean=res$"geom. mean",
+                         gsd=res$"geom. sd",
+                         median=res$median,
+                         min=res$min,
+                         max=res$max,
+                         perc5=quantile05(aggr$centralValue),
+                         perc25=quantile25(aggr$centralValue),
+                         perc75=quantile75(aggr$centralValue),
+                         perc95=quantile95(aggr$centralValue),
+                         geoMean95CIUpperBound=res$"geom. mean"*res$"geom. sd"^qnorm(0.975),
+                         geoMean95CILowerBound=res$"geom. mean"*res$"geom. sd"^qnorm(0.025),
+                         mean95CIUpperBound=res$mean+qnorm(0.975)*res$sd,
+                         mean95CILowerBound=res$mean+qnorm(0.025)*res$sd)
+    }
+    else {
+      trendSummary<-NA
+    }
+    
+    seriesSet<-list(series=series,trendSummary=trendSummary,label=paste0("site_aggr",i));
+    seriesSets<-as.list(c(seriesSets,list(seriesSet)))
+    label<-paste0("Site_aggr",i)
+    labels<-as.list(c(labels,list(label)))
+  }
+  
+  
+  ## Treti opakovani cyklu - vypocet trendu primarnich rad
+  # i cyklus bezi pres sites
+  for (i in 1:length(records)) {
+    loca<-as.character(records[[i]]$rowLabel)
+    value         <-c()
+    loqValue      <-c()
+    loqMethodCode <-c()
+    unit          <-c()
+    dateTime      <-c()
+    dateTimeString<-c()
+    timeLength    <-c()
+    
+    for (j in 1:length(records[[i]]$values)) {
+      value         <-c(value,         records[[i]]$values[[j]]$value)
+      loqValue      <-c(loqValue,      records[[i]]$values[[j]]$loqValue)
+      loqMethodCode <-c(loqMethodCode, records[[i]]$values[[j]]$loqMethodCode)
+      unit          <-c(unit,          records[[i]]$values[[j]]$unit)
+      dateTime      <-c(dateTime,      records[[i]]$values[[j]]$dateTime)
+      dateTimeString<-c(dateTimeString,records[[i]]$values[[j]]$dateTimeString)
+      timeLength    <-c(timeLength,    records[[i]]$values[[j]]$timeLength)
+    }
+    
+    dateTime<-as.Date(dateTimeString)
+    
+    value         <-value[order(dateTimeString)]
+    loqValue      <-loqValue[order(dateTimeString)]
+    loqMethodCode <-loqMethodCode[order(dateTimeString)]
+    unit          <-unit[order(dateTimeString)]
+    dateTime      <-dateTime[order(dateTimeString)]
+    timeLength    <-timeLength[order(dateTimeString)]
+    dateTimeString<-dateTimeString[order(dateTimeString)]
+    
+    # Nahrada LoQ (v promenne valu budou hodnoty vstupujici do vypoctu)
+    valu<-value
+    valu[which(is.na(valu)&loqMethodCode=="INS")]<-loqValue[which(is.na(valu))]*1/2
+    
+    if (length(dateTime)>1) {
+      hole<-3*mean(dateTime[-1]-dateTime[-length(records[[i]]$values)],trim=0.05)
+    } else {
+      hole<-0
+    }
+    
+    if (max(c(hole,dateTime[-1]-dateTime[-length(records[[i]]$values)]))>hole) { # Hole added to the vector to avoid problems with vector of length 1.
+      series<-NA
+    } else {
+      curve<-data.frame(as.Date(as.numeric(genplot(valu,dateTime,n=20,distr="lnorm",plot=FALSE)$belt[1,]),origin="1970-01-01"),
+                        as.numeric(genplot(valu,dateTime,n=20,distr="lnorm",plot=FALSE)$line[1,]),
+                        as.numeric(genplot(valu,dateTime,n=20,distr="lnorm",plot=FALSE)$lower[1,]),
+                        as.numeric(genplot(valu,dateTime,n=20,distr="lnorm",plot=FALSE)$upper[1,]))
+      colnames(curve)<-c("belt","line","lower","upper")
+      
+      # Logaritmace v pripade log transformace (trend bude linearni)
+      if (transformationType=="log") {
+        curve$line<-log(curve$line)
+        curve$lower<-log(curve$lower)
+        curve$upper<-log(curve$upper)
+      }
+      
+      # j cyklus bezi pres jednotlive body krivky
+      for (j in 1:nrow(curve)) {
+        cv<-list(label=loca,
+                 centralValue=curve$line[j],
+                 whiskerTopValue=curve$upper[j],
+                 whiskerBottomValue=curve$lower[j],
+                 dateTimeString=as.character(curve$belt[j]))
+        
+        values<-as.list(c(values,list(cv)))
+      }
+    }
+    
+    timeSeriesRecord<-list(values=values,label=paste0("site_trend",i))
+    series<-as.list(c(series,list(timeSeriesRecord)))
+    
+    # Popis trendovych krivek v 3. cyklu.    
+    if (max(c(hole,dateTime[-1]-dateTime[-length(records[[i]]$values)]))>hole) {
+      trendSummary<-list(slope=genplot(valu,dateTime,n=20,distr="lnorm",plot=FALSE)$slope,
+                         intercept=genplot(valu,dateTime,n=20,distr="lnorm",plot=FALSE)$intercept)
+    }
+    else {
+      trendSummary<-NA
+    }
+    
+    seriesSet<-list(series=series,trendSummary=trendSummary,label=paste0("site_trend",i));
+    seriesSets<-as.list(c(seriesSets,list(seriesSet)))
+    label<-paste0("Site_trend",i)
+    labels<-as.list(c(labels,list(label)))
+  }
+  
+  ## Ctvrte opakovani cyklu - vypocet trendu agregovanych rad
+  
+  # Vyber agregacnich funkci
+  whisk<-c("5_95","25_75","min_max","2iq","ci")
+  whisl<-c("quantile05","quantile25","min","iql","cil")
+  whisu<-c("quantile95","quantile75","max","iqu","ciu")
+  
+  centv<-c("mean","median","geomean")
+  centf<-c("arimean","quantile50","geomean")
+  
+  f1<-centf[which(centv==centralValueType)]
+  f2<-whisl[which(whisk==whiskerValueType)]
+  f3<-whisu[which(whisk==whiskerValueType)]
+  
+  # i cyklus bezi pres sites
+  for (i in 1:length(records)) {
+    loca<-as.character(records[[i]]$rowLabel)
+    value        <-c()
+    loqValue     <-c()
+    loqMethodCode<-c()
+    unit         <-c()
+    dateTime     <-c()
+    dateTimeString<-c()
+    timeLength   <-c()
+    
+    for (j in 1:length(records[[i]]$values)) {
+      value         <-c(value,         records[[i]]$values[[j]]$value)
+      loqValue      <-c(loqValue,      records[[i]]$values[[j]]$loqValue)
+      loqMethodCode <-c(loqMethodCode, records[[i]]$values[[j]]$loqMethodCode)
+      unit          <-c(unit,          records[[i]]$values[[j]]$unit)
+      dateTime      <-c(dateTime,      records[[i]]$values[[j]]$dateTime)
+      dateTimeString<-c(dateTimeString,records[[i]]$values[[j]]$dateTimeString)
+      timeLength    <-c(timeLength,    records[[i]]$values[[j]]$timeLength)
+    }
+    
+    dateTime<-as.Date(dateTimeString)
+    
+    value         <-value[order(dateTimeString)]
+    loqValue      <-loqValue[order(dateTimeString)]
+    loqMethodCode <-loqMethodCode[order(dateTimeString)]
+    unit          <-unit[order(dateTimeString)]
+    dateTime      <-dateTime[order(dateTimeString)]
+    timeLength    <-timeLength[order(dateTimeString)]
+    dateTimeString<-dateTimeString[order(dateTimeString)]
+    
+    # Nahrada LoQ (v promenne valu budou hodnoty vstupujici do vypoctu)
+    valu<-value
+    valu[which(is.na(valu)&loqMethodCode=="INS")]<-loqValue[which(is.na(valu))]*1/2
+    
+    # Jednotky musi byt stejne
+    if (length(unique(unit))>1) {
+      stop("Units of some records differ!")
+    } else {
+      unit<-unique(unit)
+    }
+    
+    # Rocni agregace do noveho data.frame aggr
+    year<-gendate(substr(dateTimeString,1,4))
+    aggr<-data.frame(aggregate(valu,by=list(year),FUN=f1)[,2],
+                     unit,
+                     centralValueType,
+                     aggregate(valu,by=list(year),FUN=f3)[,2],
+                     aggregate(valu,by=list(year),FUN=f2)[,2],
+                     whiskerValueType,
+                     gendate(aggregate(valu,by=list(year),FUN=f1)[,1]),
+                     as.character(aggregate(valu,by=list(year),FUN=f1)[,1]),
+                     as.character(aggregate(valu,by=list(year),FUN=length)[,2]),
+                     as.character(aggregate(value,by=list(year),FUN=loqlength)[,2]))
+    colnames(aggr)<-c("centralValue","unit","centralValueType","whiskerTopValue","whiskerBottomValue","whiskerType","dateTime","dateTimeString","n","nUnderLOQ")
+    
+    if (nrow(aggr)>1) {
+      hole<-3*mean(aggr$dateTime[-1]-aggr$dateTime[-nrow(aggr)],trim=0.05)
+    } else {
+      hole<-0
+    }
+    
+    if (max(c(hole,aggr$dateTime[-1]-aggr$dateTime[-nrow(aggr)]))>hole) {
+      series<-NA
+    } else {
+      curve<-data.frame(as.Date(as.numeric(genplot(aggr$centralValue,aggr$dateTime,n=20,distr="lnorm",plot=FALSE)$belt[1,]),origin="1970-01-01"),
+                        as.numeric(genplot(aggr$centralValue,aggr$dateTime,n=20,distr="lnorm",plot=FALSE)$line[1,]),
+                        as.numeric(genplot(aggr$centralValue,aggr$dateTime,n=20,distr="lnorm",plot=FALSE)$lower[1,]),
+                        as.numeric(genplot(aggr$centralValue,aggr$dateTime,n=20,distr="lnorm",plot=FALSE)$upper[1,]))
+      colnames(curve)<-c("belt","line","lower","upper")
+      
+      # Logaritmace v pripade log transformace (trend bude linearni)
+      if (transformationType=="log") {
+        curve$line<-log(curve$line)
+        curve$lower<-log(curve$lower)
+        curve$upper<-log(curve$upper)
+      }
+      
+      # j cyklus bezi pres jednotlive body krivky
+      for (j in 1:nrow(curve)) {
+        aggValue<-list(label=loca,
+                       centralValue=curve$line[j],
+                       whiskerTopValue=curve$upper[j],
+                       whiskerBottomValue=curve$lower[j],
+                       dateTimeString=as.character(curve$belt[j]))
+        
+        values<-as.list(c(values,list(aggValue)))
+      }
+      
+      timeSeriesRecord<-list(values=values,label=paste0("site_trend_aggr",i))
+      series<-as.list(c(series,list(timeSeriesRecord)))
+    }
+    
+    # Popis trendovych agegovanych krivek ve 4. cyklu.    
+    if (max(c(hole,aggr$dateTime[-1]-aggr$dateTime[-nrow(aggr)]))>hole) {
+      trendSummary<-list(slope=genplot(valu,aggr$dateTime,n=20,distr="lnorm",plot=FALSE)$slope,
+                         intercept=genplot(valu,aggr$dateTime,n=20,distr="lnorm",plot=FALSE)$intercept)
+    }
+    else {
+      trendSummary<-NA
+    }
+    
+    seriesSet<-list(series=series,trendSummary=trendSummary,label=paste0("site_trend_aggr",i));
+    seriesSets<-as.list(c(seriesSets,list(seriesSet)))
+    label<-paste0("Site_trend_aggr",i)
+    labels<-as.list(c(labels,list(label)))
+  }
+  
   
   
   

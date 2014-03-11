@@ -277,7 +277,7 @@ ts<-function(records,centralValueType="median",whiskerValueType="5_95",transform
     timeLength    <-c()
     
     #for (j in 1:length(records[[i]]$values)) {
-    for (j in 2:length(records[[i]]$values)) {
+    for (j in 3:length(records[[i]]$values)) {
       value         <-c(value,         records[[i]]$values[[j]]$value)
       loqValue      <-c(loqValue,      records[[i]]$values[[j]]$loqValue)
       loqMethodCode <-c(loqMethodCode, records[[i]]$values[[j]]$loqMethodCode)

@@ -312,6 +312,8 @@ ts<-function(records,centralValueType="median",whiskerValueType="5_95",transform
       colnames(curve)<-c("belt","line","lower","upper")
       
       # Logaritmace v pripade log transformace (trend bude linearni)
+      return(list(transformationType=="log"))
+      
       if (transformationType=="log") {
         curve$line<-log(curve$line)
         curve$lower<-log(curve$lower)

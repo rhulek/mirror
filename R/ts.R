@@ -1,7 +1,5 @@
 ts<-function(records,centralValueType="median",whiskerValueType="5_95",transformationType="none") {  
   
-  return(length(records))
-  
   library(genasis)
   
   ## Celkova obalka
@@ -489,6 +487,8 @@ ts<-function(records,centralValueType="median",whiskerValueType="5_95",transform
   valu<-c()
   data<-c()
   unit<-c()
+  
+  return(numofrows)
   
   for (i in 1:numofrows) {
     lengthofrow<-length(seriesSets[[numofrows+i]]$series[[1]]$values)

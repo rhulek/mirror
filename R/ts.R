@@ -47,8 +47,12 @@ ts<-function(records,centralValueType="median",whiskerValueType="5_95",transform
     if (transformationType=="log") {
       valu<-log(valu)
     }
-    
-    hole<-max(c(0,3*mean(dateTime[-1]-dateTime[-length(records[[i]]$values)],trim=0.05)))
+   
+    if (length(dateTime)>1) {
+      hole<-max(c(0,3*mean(dateTime[-1]-dateTime[-length(records[[i]]$values)],trim=0.05)
+    } else {
+      hole<-0
+    }
     
     # k udava poradi segmentu jedne casove rady
     k<-1
@@ -192,7 +196,11 @@ ts<-function(records,centralValueType="median",whiskerValueType="5_95",transform
                      as.character(aggregate(value,by=list(year),FUN=loqlength)[,2]))
     colnames(aggr)<-c("centralValue","unit","centralValueType","whiskerTopValue","whiskerBottomValue","whiskerType","dateTime","dateTimeString","n","nUnderLOQ")
     
-    hole<-max(c(0,3*mean(aggr$dateTime[-1]-aggr$dateTime[-nrow(aggr)],trim=0.05)))
+    if (nrow(aggr)>1) {
+      hole<-3*mean(aggr$dateTime[-1]-aggr$dateTime[-nrow(aggr)],trim=0.05)
+    } else {
+      hole<-0
+    }
     
     # k udava poradi segmentu jedne casove rady
     k<-1
@@ -422,7 +430,11 @@ ts<-function(records,centralValueType="median",whiskerValueType="5_95",transform
                      as.character(aggregate(value,by=list(year),FUN=loqlength)[,2]))
     colnames(aggr)<-c("centralValue","unit","centralValueType","whiskerTopValue","whiskerBottomValue","whiskerType","dateTime","dateTimeString","n","nUnderLOQ")
     
-    hole<-max(c(0,3*mean(aggr$dateTime[-1]-aggr$dateTime[-nrow(aggr)],trim=0.05)))
+    if (nrow(aggr)>1) {
+      hole<-3*mean(aggr$dateTime[-1]-aggr$dateTime[-nrow(aggr))],trim=0.05)
+    } else {
+      hole<-0
+    }
     
     if (max(c(hole,aggr$dateTime[-1]-aggr$dateTime[-nrow(aggr)]))>hole) {
       series<-NA
@@ -518,7 +530,14 @@ ts<-function(records,centralValueType="median",whiskerValueType="5_95",transform
                    as.character(aggregate(valu,by=list(year),FUN=loqlength)[,2]))
   colnames(aggr)<-c("centralValue","unit","centralValueType","whiskerTopValue","whiskerBottomValue","whiskerType","dateTime","dateTimeString","n","nUnderLOQ")
   
-  hole<-max(c(0,3*mean(aggr$dateTime[-1]-aggr$dateTime[-nrow(aggr)],trim=0.05)))
+  if (nrow(aggr)>1) {
+    hole<-3*mean(aggr$dateTime[-1]-aggr$dateTime[-nrow(aggr)],trim=0.05)
+  } else {
+    hole<-0
+  }
+
+
+
   
   # k udava poradi segmentu jedne casove rady
   k<-1

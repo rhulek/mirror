@@ -204,11 +204,6 @@ ts<-function(records,centralValueType="median",whiskerValueType="5_95",transform
       hole<-0
     }
     
-    a<-as.Date(c("2014-01-01","2014-02-02","2014-03-03"))
-    b<-c(1,1,2)
-    
-    aggregate(a,by=list(b),gmean)
-    
     # k udava poradi segmentu jedne casove rady
     k<-1
     values<-list()

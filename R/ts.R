@@ -1,8 +1,9 @@
-ts<-function(records,centralValueType="median",whiskerValueType="5_95",transformationType="none") {  
+ts<-function(records,centralValueType="median",whiskerValueType="5_95",transformationType="none") {
+  
+  casovani<-c()
+  casovani<-c(casovani,"Pred nactenim knihovny",as.character(format(Sys.time(), "%H:%M:%OS3")))
   
   library(genasis)
-
-  casovani<-c()
     
   ## Celkova obalka
   allSeries<-list()
@@ -638,6 +639,8 @@ ts<-function(records,centralValueType="median",whiskerValueType="5_95",transform
                   aggregationLabels=aggregationLabels)
   
   timeSeriesDataSeries<-list(allSeries=allSeries)
+  
+  casovani<-c(casovani,"Konec",as.character(format(Sys.time(), "%H:%M:%OS3")))
   
   return(list(timeSeriesDataSeries,casovani))
 }

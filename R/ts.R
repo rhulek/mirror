@@ -3,8 +3,6 @@ ts<-function(records,centralValueType="median",whiskerValueType="5_95",transform
   casovani<-c()
   casovani<-c(casovani,"Pred nactenim knihovny",as.character(format(Sys.time(), "%H:%M:%OS3")))
   
-  return(casovani)
-  
   library(genasis)
   
   cenValue<-c()
@@ -110,7 +108,8 @@ ts<-function(records,centralValueType="median",whiskerValueType="5_95",transform
     botValue    <-c(botValue,rep(NA,length(values)))
     topValue    <-c(botValue,rep(NA,length(values)))
                     
-                    return(list(cenValue,botValue,topValue))
+    return(list(cenValue,botValue,topValue))
+    
     dateOfPoint <-
     nameOfSeries<-
     segment     <-

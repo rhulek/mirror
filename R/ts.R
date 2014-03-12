@@ -642,5 +642,5 @@ ts<-function(records,centralValueType="median",whiskerValueType="5_95",transform
   
   casovani<-c(casovani,"Konec",as.character(format(Sys.time(), "%H:%M:%OS3")))
   
-  return(list(timeSeriesDataSeries,casovani))
+  return(list(casovani))
 }

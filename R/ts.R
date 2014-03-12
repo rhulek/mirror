@@ -107,8 +107,8 @@ ts<-function(records,centralValueType="median",whiskerValueType="5_95",transform
     series<-as.list(c(series,list(timeSeriesRecord)))
     
     cenValue    <-c(cenValue,values$value)
-    botValue    <-c(botValue,rep(NA,length(values))
-    topValue    <-c(botValue,rep(NA,length(values))
+    botValue    <-c(botValue,rep(NA,length(values)))
+    topValue    <-c(botValue,rep(NA,length(values)))
                     
                     return(list(cenValue,botValue,topValue))
     dateOfPoint <-

@@ -678,5 +678,5 @@ ts<-function(records,centralValueType="median",whiskerValueType="5_95",transform
   popis_value<-round(runif(200,1,10),3)
   
   
-  return(list(centralValue,top,bottom,date,rada,usek,typ,popis_rada,popis_param,popis_value))
+  #return(list(centralValue,top,bottom,date,rada,usek,typ,popis_rada,popis_param,popis_value))
 }

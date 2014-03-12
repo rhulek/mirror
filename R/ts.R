@@ -485,6 +485,7 @@ ts<-function(records,centralValueType="median",whiskerValueType="5_95",transform
     labels<-as.list(c(labels,list(label)))
   }
   
+
   ## Vypocet prostorove agregovane rady z jednotlivych rocnich agregaci (jen jednou pro cely datovy soubor)
   numofrows<-length(seriesSets)/4
   valu<-c()
@@ -500,6 +501,13 @@ ts<-function(records,centralValueType="median",whiskerValueType="5_95",transform
       unit<-c(unit,as.character(seriesSets[[numofrows+i]]$series[[1]]$values[[j]]$unit))
     }    
   }
+  
+  data<-as.Date(data)
+  valu<-as.numeric(valu)
+  
+  unit<-unit[order(data)]
+  valu<-valu[order(data)]
+  data<-data[order(data)]
   
   # Jednotky musi byt stejne
   if (length(unique(unit))>1) {
@@ -538,9 +546,6 @@ ts<-function(records,centralValueType="median",whiskerValueType="5_95",transform
   } else {
     hole<-0
   }
-
-
-
   
   # k udava poradi segmentu jedne casove rady
   k<-1
@@ -610,12 +615,11 @@ ts<-function(records,centralValueType="median",whiskerValueType="5_95",transform
   label<-"All_aggr"
   aggregationLabels<-list(label)
   
-  
   ## Zabaleni vysledku
   allSeries<-list(seriesSets=seriesSets,
                   labels=labels,
-                  allAggregation=allAggregation,
-                  aggregationLabels=aggregationLabels)
+                  allAggregation=1,
+                  aggregationLabels=1)
   
   timeSeriesDataSeries<-list(allSeries=allSeries)
   

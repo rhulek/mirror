@@ -5,8 +5,6 @@ ts<-function(records,centralValueType="median",whiskerValueType="5_95",transform
   
   library(genasis)
   
-  return(casovani)
-  
   cenValue<-c()
   topValue<-c()
   botValue<-c()

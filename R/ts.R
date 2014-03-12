@@ -642,5 +642,18 @@ ts<-function(records,centralValueType="median",whiskerValueType="5_95",transform
   
   casovani<-c(casovani,"Konec",as.character(format(Sys.time(), "%H:%M:%OS3")))
   
-  return(list(casovani))
+  centralValue<-round(rlnorm(2000,2,4),3)
+  top<-round(centralValue*(1+rlnorm(2000,0.1,0.3)),3)
+  bottom<-round(centralValue/(1+rlnorm(2000,1,3)),3)
+  date<-rep("2011-01-01",2000)
+  rada<-rep("Site-X",2000)
+  usek<-rep("Usek-X",2000)
+  typ<-rep("Typ-X",2000)
+  
+  popis_rada<-rep("Site-X",200)
+  popis_param<-rep("Parametr-X",200)
+  popis_value<-round(runif(200,1,10),3)
+  
+  
+  return(list(centralValue,top,bottom,date,rada,usek,typ,popis_rada,popis_param,popis_value))
 }

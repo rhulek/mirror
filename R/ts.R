@@ -3,9 +3,9 @@ ts<-function(records,centralValueType="median",whiskerValueType="5_95",transform
   casovani<-c()
   casovani<-c(casovani,"Pred nactenim knihovny",as.character(format(Sys.time(), "%H:%M:%OS3")))
   
-  return(casovani)
-  
   library(genasis)
+  
+  return(casovani)
   
   cenValue<-c()
   topValue<-c()

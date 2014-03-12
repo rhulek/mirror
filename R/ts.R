@@ -104,11 +104,11 @@ ts<-function(records,centralValueType="median",whiskerValueType="5_95",transform
     timeSeriesRecord<-list(values=values,label=paste0("site",i," part",k))
     series<-as.list(c(series,list(timeSeriesRecord)))
     
-    centValue   <-c(cenValue,values$value)
+    cenValue    <-c(cenValue,values$value)
     botValue    <-c(botValue,rep(NA,length(values))
     topValue    <-c(botValue,rep(NA,length(values))
                     
-                    return(list(centValue,botValue,topValue))
+                    return(list(cenValue,botValue,topValue))
     dateOfPoint <-
     nameOfSeries<-
     segment     <-

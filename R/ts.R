@@ -192,8 +192,8 @@ ts<-function(records,centralValueType="median",whiskerValueType="5_95",transform
                      aggregate(valu,by=list(year),FUN=f3)[,2],
                      aggregate(valu,by=list(year),FUN=f2)[,2],
                      whiskerValueType,
-                     gendate(aggregate(valu,by=list(year),FUN=f1)[,1]),
-                     as.character(aggregate(valu,by=list(year),FUN=f1)[,1]),
+                     gendate(aggregate(dateTime,by=list(year),FUN=f1)[,1]),
+                     as.character(aggregate(dateTime,by=list(year),FUN=f1)[,1]),
                      as.character(aggregate(valu,by=list(year),FUN=length)[,2]),
                      as.character(aggregate(value,by=list(year),FUN=loqlength)[,2]))
     colnames(aggr)<-c("centralValue","unit","centralValueType","whiskerTopValue","whiskerBottomValue","whiskerType","dateTime","dateTimeString","n","nUnderLOQ")
@@ -427,8 +427,8 @@ ts<-function(records,centralValueType="median",whiskerValueType="5_95",transform
                      aggregate(valu,by=list(year),FUN=f3)[,2],
                      aggregate(valu,by=list(year),FUN=f2)[,2],
                      whiskerValueType,
-                     gendate(aggregate(valu,by=list(year),FUN=f1)[,1]),
-                     as.character(aggregate(valu,by=list(year),FUN=f1)[,1]),
+                     gendate(aggregate(dateTime,by=list(year),FUN=f1)[,1]),
+                     as.character(aggregate(dateTime,by=list(year),FUN=f1)[,1]),
                      as.character(aggregate(valu,by=list(year),FUN=length)[,2]),
                      as.character(aggregate(value,by=list(year),FUN=loqlength)[,2]))
     colnames(aggr)<-c("centralValue","unit","centralValueType","whiskerTopValue","whiskerBottomValue","whiskerType","dateTime","dateTimeString","n","nUnderLOQ")
@@ -535,8 +535,8 @@ ts<-function(records,centralValueType="median",whiskerValueType="5_95",transform
                    aggregate(valu,by=list(year),FUN=f3)[,2],
                    aggregate(valu,by=list(year),FUN=f2)[,2],
                    whiskerValueType,
-                   gendate(aggregate(valu,by=list(year),FUN=f1)[,1]),
-                   as.character(aggregate(valu,by=list(year),FUN=f1)[,1]),
+                   gendate(aggregate(dateTime,by=list(year),FUN=f1)[,1]),
+                   as.character(aggregate(dateTime,by=list(year),FUN=f1)[,1]),
                    as.character(aggregate(valu,by=list(year),FUN=length)[,2]),
                    as.character(aggregate(valu,by=list(year),FUN=loqlength)[,2]))
   colnames(aggr)<-c("centralValue","unit","centralValueType","whiskerTopValue","whiskerBottomValue","whiskerType","dateTime","dateTimeString","n","nUnderLOQ")

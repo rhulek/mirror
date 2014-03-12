@@ -192,8 +192,8 @@ ts<-function(records,centralValueType="median",whiskerValueType="5_95",transform
                      aggregate(valu,by=list(year),FUN=f3)[,2],
                      aggregate(valu,by=list(year),FUN=f2)[,2],
                      whiskerValueType,
-                     gendate(aggregate(dateTime,by=list(year),FUN=f1)[,1]),
-                     as.character(aggregate(dateTime,by=list(year),FUN=f1)[,1]),
+                     gendate(aggregate(dateTime,by=list(year),FUN=mean)[,1]),
+                     as.character(aggregate(dateTime,by=list(year),FUN=mean)[,1]),
                      as.character(aggregate(valu,by=list(year),FUN=length)[,2]),
                      as.character(aggregate(value,by=list(year),FUN=loqlength)[,2]))
     colnames(aggr)<-c("centralValue","unit","centralValueType","whiskerTopValue","whiskerBottomValue","whiskerType","dateTime","dateTimeString","n","nUnderLOQ")
@@ -203,6 +203,11 @@ ts<-function(records,centralValueType="median",whiskerValueType="5_95",transform
     } else {
       hole<-0
     }
+    
+    a<-as.Date(c("2014-01-01","2014-02-02","2014-03-03"))
+    b<-c(1,1,2)
+    
+    aggregate(a,by=list(b),gmean)
     
     # k udava poradi segmentu jedne casove rady
     k<-1
@@ -427,8 +432,8 @@ ts<-function(records,centralValueType="median",whiskerValueType="5_95",transform
                      aggregate(valu,by=list(year),FUN=f3)[,2],
                      aggregate(valu,by=list(year),FUN=f2)[,2],
                      whiskerValueType,
-                     gendate(aggregate(dateTime,by=list(year),FUN=f1)[,1]),
-                     as.character(aggregate(dateTime,by=list(year),FUN=f1)[,1]),
+                     gendate(aggregate(dateTime,by=list(year),FUN=mean)[,1]),
+                     as.character(aggregate(dateTime,by=list(year),FUN=mean)[,1]),
                      as.character(aggregate(valu,by=list(year),FUN=length)[,2]),
                      as.character(aggregate(value,by=list(year),FUN=loqlength)[,2]))
     colnames(aggr)<-c("centralValue","unit","centralValueType","whiskerTopValue","whiskerBottomValue","whiskerType","dateTime","dateTimeString","n","nUnderLOQ")
@@ -535,8 +540,8 @@ ts<-function(records,centralValueType="median",whiskerValueType="5_95",transform
                    aggregate(valu,by=list(year),FUN=f3)[,2],
                    aggregate(valu,by=list(year),FUN=f2)[,2],
                    whiskerValueType,
-                   gendate(aggregate(dateTime,by=list(year),FUN=f1)[,1]),
-                   as.character(aggregate(dateTime,by=list(year),FUN=f1)[,1]),
+                   gendate(aggregate(dateTime,by=list(year),FUN=mean)[,1]),
+                   as.character(aggregate(dateTime,by=list(year),FUN=mean)[,1]),
                    as.character(aggregate(valu,by=list(year),FUN=length)[,2]),
                    as.character(aggregate(valu,by=list(year),FUN=loqlength)[,2]))
   colnames(aggr)<-c("centralValue","unit","centralValueType","whiskerTopValue","whiskerBottomValue","whiskerType","dateTime","dateTimeString","n","nUnderLOQ")

@@ -1,7 +1,9 @@
 ts<-function(records,centralValueType="median",whiskerValueType="5_95",transformationType="none") {  
   
   library(genasis)
-  
+
+  casovani<-c()
+    
   ## Celkova obalka
   allSeries<-list()
   
@@ -18,6 +20,8 @@ ts<-function(records,centralValueType="median",whiskerValueType="5_95",transform
     dateTime      <-c()
     dateTimeString<-c()
     timeLength    <-c()
+    
+    casovani<-c(casovani,paste0("1. cyklus, ",i,". iterace"),as.character(format(Sys.time(), "%H:%M:%OS3")))
     
     for (j in 1:length(records[[i]]$values)) {
       value         <-c(value,         records[[i]]$values[[j]]$value)
@@ -147,6 +151,9 @@ ts<-function(records,centralValueType="median",whiskerValueType="5_95",transform
     dateTime      <-c()
     dateTimeString<-c()
     timeLength    <-c()
+    
+    casovani<-c(casovani,paste0("2. cyklus, ",i,". iterace"),as.character(format(Sys.time(), "%H:%M:%OS3")))
+    
     
     for (j in 1:length(records[[i]]$values)) {
       value         <-c(value,         records[[i]]$values[[j]]$value)
@@ -287,6 +294,9 @@ ts<-function(records,centralValueType="median",whiskerValueType="5_95",transform
     dateTimeString<-c()
     timeLength    <-c()
     
+    casovani<-c(casovani,paste0("3. cyklus, ",i,". iterace"),as.character(format(Sys.time(), "%H:%M:%OS3")))
+    
+    
     for (j in 1:length(records[[i]]$values)) {
       value         <-c(value,         records[[i]]$values[[j]]$value)
       loqValue      <-c(loqValue,      records[[i]]$values[[j]]$loqValue)
@@ -387,6 +397,9 @@ ts<-function(records,centralValueType="median",whiskerValueType="5_95",transform
     dateTime     <-c()
     dateTimeString<-c()
     timeLength   <-c()
+    
+    casovani<-c(casovani,paste0("4. cyklus, ",i,". iterace"),as.character(format(Sys.time(), "%H:%M:%OS3")))
+    
     
     for (j in 1:length(records[[i]]$values)) {
       value         <-c(value,         records[[i]]$values[[j]]$value)
@@ -494,6 +507,9 @@ ts<-function(records,centralValueType="median",whiskerValueType="5_95",transform
   
   for (i in 1:numofrows) {
     lengthofrow<-length(seriesSets[[numofrows+i]]$series[[1]]$values)
+    
+    casovani<-c(casovani,paste0("5. cyklus, ",i,". iterace"),as.character(format(Sys.time(), "%H:%M:%OS3")))
+    
     
     for (j in 1:lengthofrow) {
       valu<-c(valu,seriesSets[[numofrows+i]]$series[[1]]$values[[j]]$centralValue)
@@ -623,5 +639,5 @@ ts<-function(records,centralValueType="median",whiskerValueType="5_95",transform
   
   timeSeriesDataSeries<-list(allSeries=allSeries)
   
-  return(timeSeriesDataSeries)
+  return(list(timeSeriesDataSeries,casovani))
 }
